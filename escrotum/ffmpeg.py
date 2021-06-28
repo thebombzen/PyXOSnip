@@ -11,10 +11,10 @@ class Ffmpeg:
         self.output = output
 
         self.display = os.environ["DISPLAY"]
-        if cmd_exists("avconv"):
-            self.binary = "avconv"
-        elif cmd_exists("ffmpeg"):
+        if cmd_exists("ffmpeg"):
             self.binary = "ffmpeg"
+        elif cmd_exists("avconv"):
+            self.binary = "avconv"
         else:
             raise Exception("ffmpeg or avconv not found")
 
