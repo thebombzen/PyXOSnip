@@ -30,24 +30,23 @@ class Ffmpeg:
             # force overwrite file
             '-y',
             '-hide_banner',
-            '-video_size', video_size,
             '-f', 'x11grab',
+            '-video_size', video_size,
+            # TODO get actual monitor refresh rate, via RandR, or pass via __init__
+            '-framerate', '60',
             '-i', video_input,
-            # Somewhere in the code the extension is `.mkv`. Assuming VP9.
-            # Google uses 'vp9' only
-            '-c:v', 'libvpx-vp9',
-            '-b:v', '1000k',
-            '-quality', 'realtime',
+            # Realtime grabbing should use x264. VP9 and later codecs too slow
+            # TODO allow enabling a hardware encoder on the CLI
+            '-c:v', 'libx264',
+            # This is a very low CRF. should postproc it later.
+            '-crf:v', '12',
+            # Ultrafast turns off too many features
+            # TODO make configurable
+            '-preset:v', 'superfast'
             # Get threads automatically? Is it CPU threads?
-            '-threads', '8',
-            '-speed', '7',
-            '-row-mt', '1',
-            '-tile-columns', '3',
-            '-frame-parallel', '1',
-            '-qmin', '4',
-            '-qmax', '13',
-            '-r', '30',
-            '-g', '90',
+            # ffmpeg and libx264 automatically multithread without -threads
+            # You can set it to threads 0 to explicitly enable "autothreads"
+            '-threads:v', '0',
             self.output]
         self.proc = subprocess.Popen(
             cmd,
