@@ -1,13 +1,17 @@
-Escrotum (`Help Wanted! <https://github.com/Roger/escrotum/issues/44>`_)
+PyXOSnip
 ========
 
 Linux screen capture and screen recording program inspired by scrot.
-
+Forked from `Escrotum <https://github.com/Roger/escrotum>` _.
 
 Why?
 ----
 
-Because scrot has glitches when selection is used in refreshing windows
+Because scrot has glitches when selection is used in refreshing windows.
+Because escrotum isn't in active maintainment. I also hate its name so I'm using this as an opportunity to change it.
+
+PyXOSnip stands for Python X Orange Snipper. Orange being a name I attach to some of my projects, and Snipper becaues I'd like to replicate most of the functionality in Microsoft's built-in Snipping Tool for Windows 10 (which is a pretty good tool, to be honest).
+
 
 Features
 --------
@@ -21,14 +25,14 @@ Features
 
 ::
 
-    usage: escrotum [-h] [-v] [-s] [-x XID] [-d DELAY]
+    usage: pyxosnip [-h] [-v] [-s] [-x XID] [-d DELAY]
                     [--selection-delay SELECTION_DELAY] [-c] [-C] [-e COMMAND]
                     [-r]
                     [FILENAME]
 
     positional arguments:
       FILENAME              image filename, default is
-                            %Y-%m-%d-%H%M%S_$wx$h_escrotum.png
+                            %Y-%m-%d-%H%M%S_$wx$pyxosnip.png
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -49,20 +53,20 @@ Features
 
       SPECIAL STRINGS
       Both the --exec and filename parameters can take format specifiers
-      that are expanded by escrotum when encountered.
+      that are expanded by pyxosnip when encountered.
 
       There are two types of format specifier. Characters preceded by a '%'
       are interpreted by strftime(2). See man strftime for examples.
       These options may be used to refer to the current date and time.
 
-      The second kind are internal to escrotum and are prefixed by '$'
+      The second kind are internal to pyxosnip and are prefixed by '$'
       The following specifiers are recognised:
       	$f image path/filename (ignored when used in the filename)
       	$w image width
       	$h image height
       Example:
-      	escrotum '%Y-%m-%d-%H%M%S_$wx$h_escrotum.png'
-      	Creates a file called something like 2013-06-17-082335_263x738_escrotum.png
+      	pyxosnip '%Y-%m-%d-%H%M%S_$wx$h_pyxosnip.png'
+      	Creates a file called something like 2013-06-17-082335_263x738_pyxosnip.png
 
       EXIT STATUS CODES
       1 can't get the window by xid
@@ -75,5 +79,5 @@ Features
 Install
 -------
 
-* on archlinux, install with your favorite aur manager, ie. yay -S escrotum-git
-* with pip, pip install escrotum
+* Working on this, it's not on pip or AUR yet
+* You can always clone the repo and install it with setup.py

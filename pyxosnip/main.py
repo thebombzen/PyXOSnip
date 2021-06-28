@@ -20,7 +20,7 @@ from .ffmpeg import Ffmpeg
 from .keybinding import GrabKeyboard
 
 
-__version__ = "0.2.1"
+__version__ = "1.1.0"
 
 EXIT_XID_ERROR = 1
 EXIT_INVALID_PIXBUF = 2
@@ -30,11 +30,11 @@ EXIT_CANT_GRAB_MOUSE = 5
 EXIT_FFMPEG_ERROR = 6
 
 
-class Escrotum(gtk.Dialog):
+class PyXOSnip(gtk.Dialog):
     def __init__(self, filename=None, selection=False, xid=None, delay=None,
                  selection_delay=250, countdown=False, use_clipboard=False,
                  command=None, record=False):
-        super(Escrotum, self).__init__(type=gtk.WindowType.POPUP)
+        super(PYXOSnip, self).__init__(type=gtk.WindowType.POPUP)
 
         self.started = False
         gdk.event_handler_set(self.event_handler)
@@ -56,7 +56,7 @@ class Escrotum(gtk.Dialog):
         self.filename = filename
         if not filename:
             ext = "webm" if record else "png"
-            self.filename = f"%Y-%m-%d-%H%M%S_$wx$h_escrotum.{ext}"
+            self.filename = f"%Y-%m-%d-%H%M%S_$wx$h_pyxosnip.{ext}"
 
         if record and not self.filename.endswith(".webm"):
             print("Video recording only supports webm")
@@ -372,7 +372,7 @@ class Escrotum(gtk.Dialog):
     def save_clipboard(self, pb):
         """
         Save the pixbuf to the clipboard
-        escrotum would be alive until the clipboard owner is changed
+        PyXOSnip would be alive until the clipboard owner is changed
         """
 
         clipboard = gtk.Clipboard.get(gdk.SELECTION_CLIPBOARD)
@@ -465,20 +465,20 @@ def get_options():
     epilog = """
   SPECIAL STRINGS
   Both the --exec and filename parameters can take format specifiers
-  that are expanded by escrotum when encountered.
+  that are expanded by PyXOSnip when encountered.
 
   There are two types of format specifier. Characters preceded by a '%'
   are interpreted by strftime(2). See man strftime for examples.
   These options may be used to refer to the current date and time.
 
-  The second kind are internal to escrotum and are prefixed by '$'
+  The second kind are internal to PyXOSnip and are prefixed by '$'
   The following specifiers are recognised:
   \t$f image path/filename (ignored when used in the filename)
   \t$w image width
   \t$h image height
   Example:
-  \tescrotum '%Y-%m-%d-%H%M%S_$wx$h_escrotum.png'
-  \tCreates a file called something like 2013-06-17-082335_263x738_escrotum.png
+  \tpyxosnip '%Y-%m-%d-%H%M%S_$wx$h_pyxosnip.png'
+  \tCreates a file called something like 2013-06-17-082335_263x738_pyxosnip.png
 
   EXIT STATUS CODES
   1 can't get the window by xid
@@ -525,7 +525,7 @@ def get_options():
     parser.add_argument(
         'FILENAME', type=str, nargs="?",
         help="image filename, default is "
-             "%%Y-%%m-%%d-%%H%%M%%S_$wx$h_escrotum.png")
+             "%%Y-%%m-%%d-%%H%%M%%S_$wx$h_pyxosnip.png")
 
     return parser.parse_args()
 
@@ -534,14 +534,14 @@ def run():
     args = get_options()
 
     if args.version:
-        print("escrotum %s" % __version__)
+        print("pyxosnip %s" % __version__)
         exit()
 
     if args.countdown and not args.delay:
         print("Countdown parameter requires delay")
         exit()
 
-    Escrotum(filename=args.FILENAME, selection=args.select, xid=args.xid,
+    PyXOSnip(filename=args.FILENAME, selection=args.select, xid=args.xid,
              delay=args.delay, selection_delay=args.selection_delay,
              countdown=args.countdown, use_clipboard=args.clipboard,
              command=args.command, record=args.record)

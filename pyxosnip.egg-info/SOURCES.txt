@@ -1,0 +1,15 @@
+LICENCE.txt
+README.rst
+setup.py
+pyxosnip/__init__.py
+pyxosnip/ffmpeg.py
+pyxosnip/keybinding.py
+pyxosnip/main.py
+pyxosnip/util.py
+pyxosnip.egg-info/PKG-INFO
+pyxosnip.egg-info/SOURCES.txt
+pyxosnip.egg-info/dependency_links.txt
+pyxosnip.egg-info/entry_points.txt
+pyxosnip.egg-info/not-zip-safe
+pyxosnip.egg-info/requires.txt
+pyxosnip.egg-info/top_level.txt
