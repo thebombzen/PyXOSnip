@@ -34,7 +34,7 @@ class PyXOSnip(gtk.Dialog):
     def __init__(self, filename=None, selection=False, xid=None, delay=None,
                  selection_delay=250, countdown=False, use_clipboard=False,
                  command=None, record=False):
-        super(PYXOSnip, self).__init__(type=gtk.WindowType.POPUP)
+        super(PyXOSnip, self).__init__(type=gtk.WindowType.POPUP)
 
         self.started = False
         gdk.event_handler_set(self.event_handler)
