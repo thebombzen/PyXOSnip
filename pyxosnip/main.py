@@ -268,7 +268,7 @@ class PyXOSnip(gtk.Dialog):
         if self.click_selection:
             xid = get_selected_window()
             if not xid:
-                print("Can't get the xid of the selected window")
+                print('Can’t get the xid of the selected window')
                 exit(EXIT_XID_ERROR)
             selected_window = get_window_from_xid(xid)
             x, y, width, height = selected_window.get_geometry()
@@ -315,7 +315,7 @@ class PyXOSnip(gtk.Dialog):
         filename = self._expand_argument(width, height, self.filename)
         ffmpeg = Ffmpeg(x, y, width, height, filename)
         if not ffmpeg.start():
-            print("ffmpeg can't record video")
+            print('ffmpeg can’t record video')
             exit(EXIT_FFMPEG_ERROR)
         print('Recording video, stop with Ctrl-Alt-s')
 
