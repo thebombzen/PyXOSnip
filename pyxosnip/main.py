@@ -11,7 +11,8 @@ import gi
 gi.require_version('Gtk', '3.0')  # noqa: E402
 from gi.repository import Gtk as gtk
 from gi.repository import Gdk as gdk
-from gi.repository import GdkPixbuf as Pixbuf
+from gi.repository.GdkPixbuf import Pixbuf as pixbuf
+from gi.repository.GdkPixbuf import Colorspace as colorspace
 from gi.repository import GLib as glib
 import cairo
 
@@ -20,7 +21,7 @@ from .ffmpeg import Ffmpeg
 from .keybinding import GrabKeyboard
 
 
-__version__ = "1.1.0"
+__version__ = '1.1.0'
 
 EXIT_XID_ERROR = 1
 EXIT_INVALID_PIXBUF = 2
@@ -55,11 +56,11 @@ class PyXOSnip(gtk.Dialog):
 
         self.filename = filename
         if not filename:
-            ext = "webm" if record else "png"
-            self.filename = f"%Y-%m-%d-%H%M%S_$wx$h_pyxosnip.{ext}"
+            ext = 'webm' if record else 'png'
+            self.filename = f'pyxosnip_$wx$h_%Y-%m-%d-%H%M%S.{ext}'
 
-        if record and not self.filename.endswith(".webm"):
-            print("Video recording only supports webm")
+        if record and not self.filename.endswith('.webm'):
+            print('Video recording only supports webm')
             exit(EXIT_FFMPEG_ERROR)
 
         self.delay = delay
@@ -82,11 +83,11 @@ class PyXOSnip(gtk.Dialog):
         self.set_app_paintable(True)
 
         self.set_keep_above(True)
-        self.connect("draw", self.on_expose)
+        self.connect('draw', self.on_expose)
 
         if delay:
             if countdown:
-                sys.stdout.write("Taking shot in ..%s" % delay)
+                sys.stdout.write(f'Taking shot in ... {self.delay}')
                 sys.stdout.flush()
             glib.timeout_add(1000, self.start)
         else:
@@ -98,11 +99,11 @@ class PyXOSnip(gtk.Dialog):
         if self.delay:
             self.delay -= 1
             if self.countdown:
-                sys.stdout.write(" ..%s" % self.delay)
+                sys.stdout.write(f' ... {self.delay}')
                 sys.stdout.flush()
             return True
         if self.delay == 0 and self.countdown:
-            print(".")
+            print('.')
 
         if self.selection and not self.xid:
             self.grab()
@@ -188,7 +189,7 @@ class PyXOSnip(gtk.Dialog):
 
         if event.type == gdk.EventType.BUTTON_PRESS:
             if event.button.button != 1:
-                print("Canceled by the user")
+                print('Canceled by the user')
                 exit(EXIT_CANCEL)
 
             self.started = True
@@ -198,8 +199,8 @@ class PyXOSnip(gtk.Dialog):
             self.queue_draw()
 
         elif event.type == gdk.EventType.KEY_RELEASE:
-            if gdk.keyval_name(event.keyval) == "Escape":
-                print("Canceled by the user")
+            if gdk.keyval_name(event.keyval) == 'Escape':
+                print('Canceled by the user')
                 exit(EXIT_CANCEL)
 
         elif event.type == gdk.EventType.MOTION_NOTIFY:
@@ -283,17 +284,17 @@ class PyXOSnip(gtk.Dialog):
         exit()
 
     def capture_image(self, x, y, width, height, window):
-        pb = Pixbuf.Pixbuf.new(Pixbuf.Colorspace.RGB, True, 8, width, height)
+        pb = pixbuf.new(colorspace.RGB, True, 8, width, height)
         # mask the pixbuf if we have more than one screen
         root_width, root_height = window.get_width(), window.get_height()
-        pb2 = Pixbuf.Pixbuf.new(Pixbuf.Colorspace.RGB, True, 8,
+        pb2 = pixbuf.new(colorspace.RGB, True, 8,
                                 root_width, root_height)
         pb2 = gdk.pixbuf_get_from_window(window, 0, 0, root_width, root_height)
         pb2 = self.mask_pixbuf(pb2, root_width, root_height)
         pb2.copy_area(x, y, width, height, pb, 0, 0)
 
         if not pb:
-            print("Invalid Pixbuf")
+            print('Invalid Pixbuf')
             exit(EXIT_INVALID_PIXBUF)
         if self.use_clipboard:
             self.save_clipboard(pb)
@@ -316,7 +317,7 @@ class PyXOSnip(gtk.Dialog):
         if not ffmpeg.start():
             print("ffmpeg can't record video")
             exit(EXIT_FFMPEG_ERROR)
-        print("Recording video, stop with Ctrl-Alt-s")
+        print('Recording video, stop with Ctrl-Alt-s')
 
         def wait():
             ffmpeg.stop()
@@ -364,7 +365,7 @@ class PyXOSnip(gtk.Dialog):
         pixels = img.get_data()
         data = bgra2rgba(pixels, width, height)
 
-        new_pb = Pixbuf.Pixbuf.new_from_data(data, Pixbuf.Colorspace.RGB,
+        new_pb = pixbuf.new_from_data(data, colorspace.RGB,
                                              True, 8, width, height, stride)
 
         return new_pb
@@ -377,7 +378,7 @@ class PyXOSnip(gtk.Dialog):
 
         clipboard = gtk.Clipboard.get(gdk.SELECTION_CLIPBOARD)
         clipboard.set_image(pb)
-        clipboard.connect("owner-change", self.on_owner_change)
+        clipboard.connect('owner-change', self.on_owner_change)
 
     def on_owner_change(self, clipboard, event):
         """
@@ -393,8 +394,8 @@ class PyXOSnip(gtk.Dialog):
 
     def _expand_argument(self, width, height, string):
         string = datetime.datetime.now().strftime(string)
-        string = string.replace("$w", str(width))
-        string = string.replace("$h", str(height))
+        string = string.replace('$w', str(width))
+        string = string.replace('$h', str(height))
         string = os.path.expanduser(string)
         return string
 
@@ -405,17 +406,17 @@ class PyXOSnip(gtk.Dialog):
 
         self.filename = self._expand_argument(width, height, self.filename)
 
-        filetype = "png"
-        if "." in self.filename:
-            filetype = self.filename.rsplit(".", 1)[1]
-            if filetype == "jpg":
-                filetype = "jpeg"
+        filetype = 'png'
+        if '.' in self.filename:
+            filetype = self.filename.rsplit('.', 1)[1]
+            if filetype == 'jpg':
+                filetype = 'jpeg'
 
         optskeys = []
         optsvalues = []
-        if filetype != "png":
-            optskeys.append("quality")
-            optsvalues.append("100")
+        if filetype != 'png':
+            optskeys.append('quality')
+            optsvalues.append('100')
 
         try:
             pb.savev(self.filename, filetype, optskeys, optsvalues)
@@ -428,7 +429,7 @@ class PyXOSnip(gtk.Dialog):
         if not self.command:
             return
         filename = '[CLIPBOARD]' if self.use_clipboard else self.filename
-        command = self.command.replace("$f", filename)
+        command = self.command.replace('$f', filename)
         command = self._expand_argument(width, height, command)
         subprocess.call(command, shell=True)
         # Set self.command to None
@@ -477,7 +478,7 @@ def get_options():
   \t$w image width
   \t$h image height
   Example:
-  \tpyxosnip '%Y-%m-%d-%H%M%S_$wx$h_pyxosnip.png'
+  \tpyxosnip 'pyxosnip_$wx$h_%Y-%m-%d-%H%M%S.png'
   \tCreates a file called something like 2013-06-17-082335_263x738_pyxosnip.png
 
   EXIT STATUS CODES
@@ -491,7 +492,7 @@ def get_options():
 
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description="Minimalist screenshot capture and screen recording program inspired by scrot.",
+        description='Minimalist screenshot capture and screen recording program inspired by scrot.',
         epilog=epilog)
 
     parser.add_argument(
@@ -511,21 +512,21 @@ def get_options():
         '--selection-delay', default=250, type=int,
         help='delay in milliseconds between selection/screenshot')
     parser.add_argument(
-        '-c', '--countdown', default=False, action="store_true",
+        '-c', '--countdown', default=False, action='store_true',
         help='show a countdown before taking the shot (requires delay)')
     parser.add_argument(
-        '-C', '--clipboard', default=False, action="store_true",
+        '-C', '--clipboard', default=False, action='store_true',
         help='store the image on the clipboard')
     parser.add_argument(
-        '-e', '--exec', default=None, type=str, dest="command",
-        help="run the command after the image is taken")
+        '-e', '--exec', default=None, type=str, dest='command',
+        help='run the command after the image is taken')
     parser.add_argument(
-        '-r', '--record', default=False, action="store_true",
-        help="screen recording. Alt+Ctrl+s to stop the recording")
+        '-r', '--record', default=False, action='store_true',
+        help='screen recording. Alt+Ctrl+s to stop the recording')
     parser.add_argument(
-        'FILENAME', type=str, nargs="?",
-        help="image filename, default is "
-             "%%Y-%%m-%%d-%%H%%M%%S_$wx$h_pyxosnip.png")
+        'FILENAME', type=str, nargs='?',
+        help='image filename, default is '
+             'pyxosnip_$wx$h_%%Y-%%m-%%d-%%H%%M%%S.png')
 
     return parser.parse_args()
 
@@ -534,11 +535,11 @@ def run():
     args = get_options()
 
     if args.version:
-        print("pyxosnip %s" % __version__)
+        print(f'pyxosnip {__version__}')
         exit()
 
     if args.countdown and not args.delay:
-        print("Countdown parameter requires delay")
+        print('Countdown parameter requires delay')
         exit()
 
     PyXOSnip(filename=args.FILENAME, selection=args.select, xid=args.xid,
@@ -549,9 +550,9 @@ def run():
     try:
         gtk.main()
     except KeyboardInterrupt:
-        print("Canceled by the user")
+        print('Canceled by the user')
         exit(EXIT_CANCEL)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     run()
