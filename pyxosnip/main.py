@@ -408,7 +408,7 @@ class PyXOSnip(gtk.Dialog):
 
         filetype = 'png'
         if '.' in self.filename:
-            filetype = self.filename.rsplit('.', 1)[1]
+            filetype = self.filename.rsplit('.', 1)[1].lower()
             if filetype == 'jpg':
                 filetype = 'jpeg'
 
