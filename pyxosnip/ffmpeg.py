@@ -10,17 +10,17 @@ class Ffmpeg:
 
         self.output = output
 
-        self.display = os.environ["DISPLAY"]
-        if cmd_exists("ffmpeg"):
-            self.binary = "ffmpeg"
-        elif cmd_exists("avconv"):
-            self.binary = "avconv"
+        self.display = os.environ['DISPLAY']
+        if cmd_exists('ffmpeg'):
+            self.binary = 'ffmpeg'
+        elif cmd_exists('avconv'):
+            self.binary = 'avconv'
         else:
-            raise Exception("ffmpeg or avconv not found")
+            raise Exception('ffmpeg or avconv not found')
 
     def start(self):
-        video_input = "%s+%s,%s" % (self.display, self.x, self.y)
-        video_size = "%sx%s" % (self.w, self.h)
+        video_input = f'{self.display}+{self.x},{self.y}'
+        video_size = f'{self.w}x{self.h}'
         # Based on presets from
         # EasyScreenCast GNOME Extension
         # Google's Media Core Technologies Live Encoding examples
@@ -48,14 +48,11 @@ class Ffmpeg:
             # You can set it to threads 0 to explicitly enable "autothreads"
             '-threads:v', '0',
             self.output]
-        self.proc = subprocess.Popen(
-            cmd,
-            stdin=subprocess.PIPE
-        )
+        self.proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
         self.proc.poll()
 
         return self.proc.returncode is None
 
     def stop(self):
-        self.proc.communicate(input=b"q")
+        self.proc.communicate(input=b'q')
         self.proc.wait()
