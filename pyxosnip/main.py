@@ -475,7 +475,7 @@ def get_options():
   \t$h image height
   Example:
   \tpyxosnip 'pyxosnip_$wx$h_%Y-%m-%d-%H%M%S.png'
-  \tCreates a file called something like 2013-06-17-082335_263x738_pyxosnip.png
+  \tCreates a file called something like pyxosnip_263x738_2013-06-17-082335.png
 
   EXIT STATUS CODES
   1 can't get the window by xid
