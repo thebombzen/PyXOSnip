@@ -15,7 +15,7 @@ TRIVIAL_MODS = [
 
 class GrabKeyboard:
     def __init__(self, callback, key="<Ctrl><Alt>s"):
-        self.conn = xcffib.connect(display=":0")
+        self.conn = xcffib.connect(display=os.environ['DISPLAY'])
 
         self.setup = self.conn.get_setup()
         self.screen = self.setup.roots[0]
