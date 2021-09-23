@@ -56,12 +56,8 @@ class PyXOSnip(gtk.Dialog):
 
         self.filename = filename
         if not filename:
-            ext = 'webm' if record else 'png'
+            ext = 'mkv' if record else 'png'
             self.filename = f'pyxosnip_$wx$h_%Y-%m-%d-%H%M%S.{ext}'
-
-        if record and not self.filename.endswith('.webm'):
-            print('Video recording only supports webm')
-            exit(EXIT_FFMPEG_ERROR)
 
         self.delay = delay
         self.selection_delay = selection_delay
